@@ -1,39 +1,42 @@
 pipeline {
-    agent { label "dev-server"}
-    
+    agent any
+
     stages {
-        
-        stage("code"){
-            steps{
-                git url: "https://github.com/LondheShubham153/node-todo-cicd.git", branch: "master"
-                echo 'bhaiyya code clone ho gaya'
+
+        stage("Code") {
+            steps {
+                git url: "https://github.com/bhavyasehgall/node-cicd.git", branch: "main"
+                echo 'Code cloned'
             }
         }
-        stage("build and test"){
-            steps{
-                sh "docker build -t node-app-test-new ."
-                echo 'code build bhi ho gaya'
+
+        stage("Build Docker Image") {
+            steps {
+                sh "docker build -t node-app ."
+                echo 'Docker image built'
             }
         }
-        stage("scan image"){
-            steps{
-                echo 'image scanning ho gayi'
-            }
-        }
-        stage("push"){
-            steps{
-                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker tag node-app-test-new:latest ${env.dockerHubUser}/node-app-test-new:latest"
-                sh "docker push ${env.dockerHubUser}/node-app-test-new:latest"
-                echo 'image push ho gaya'
+
+        stage("Push to DockerHub") {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: "dockerHub",
+                    passwordVariable: "dockerHubPass",
+                    usernameVariable: "dockerHubUser"
+                )]) {
+                    sh "docker login -u ${dockerHubUser} -p ${dockerHubPass}"
+                    sh "docker tag node-app ${dockerHubUser}/node-app:latest"
+                    sh "docker push ${dockerHubUser}/node-app:latest"
                 }
             }
         }
-        stage("deploy"){
-            steps{
-                sh "docker-compose down && docker-compose up -d"
-                echo 'deployment ho gayi'
+
+        stage("Deploy") {
+            steps {
+                sh "docker stop node-container || true"
+                sh "docker rm node-container || true"
+                sh "docker run -d -p 3000:3000 --name node-container ${dockerHubUser}/node-app:latest"
+                echo 'App deployed'
             }
         }
     }
