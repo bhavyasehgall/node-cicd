@@ -1,7 +1,16 @@
-FROM node:12.2.0-alpine
-WORKDIR app
-COPY . .
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy only package files first (IMPORTANT)
+COPY package*.json ./
+
+# Install dependencies (cached layer)
 RUN npm install
-RUN npm run test
+
+# Then copy rest of code
+COPY . .
+
 EXPOSE 8000
-CMD ["node","app.js"]
+
+CMD ["node", "app.js"]
