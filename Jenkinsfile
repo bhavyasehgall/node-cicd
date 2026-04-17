@@ -1,27 +1,34 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "node-app"
+        CONTAINER_NAME = "node-app-container"
+    }
+
     stages {
 
-        stage('Clone Code') {
+        stage("Clone Code") {
             steps {
-                git url: 'git@github.com:bhavyasehgall/node-cicd.git', branch: 'main'
+                git branch: "main", url: "https://github.com/bhavyasehgall/node-cicd.git"
             }
         }
 
-        stage('Build Docker Image') {
+        stage("Build Docker Image") {
             steps {
-                sh 'docker build -t node-app .'
+                sh "docker build -t $IMAGE_NAME ."
             }
         }
 
-        stage('Run Container') {
+        stage("Stop Old Container") {
             steps {
-                sh '''
-                docker stop node-app-container || true
-                docker rm node-app-container || true
-                docker run -d -p 8000:8000 --name node-app-container node-app
-                '''
+                sh "docker rm -f $CONTAINER_NAME || true"
+            }
+        }
+
+        stage("Run Container") {
+            steps {
+                sh "docker run -d -p 8000:8000 --name $CONTAINER_NAME $IMAGE_NAME"
             }
         }
     }
