@@ -1,80 +1,87 @@
-# Node.js CI/CD & DevSecOps
+# Node.js CI/CD & DevSecOps Lab
 
-A practical **Node.js CI/CD project** demonstrating application containerization and automated deployment using **Jenkins and Docker**, with supporting configurations for testing, SonarQube, DevSecOps, and Terraform.
+A hands-on project exploring **Node.js application development, CI/CD automation, containerization, and DevSecOps concepts** using Jenkins, Docker, SonarQube, and Terraform.
 
-## Overview
+The project was built as a practical environment for understanding how application development and security practices can be integrated into an automated delivery workflow.
 
-This project uses a simple Node.js Todo application to demonstrate a basic CI/CD workflow.
+---
+
+## 🎯 Project Overview
+
+This project demonstrates a basic workflow around:
 
 ```text
-GitHub
-   │
-   ▼
+Developer
+    ↓
+Git Repository
+    ↓
 Jenkins
-   │
-   ├── Clone Repository
-   │
-   ├── Build Docker Image
-   │
-   ├── Remove Previous Container
-   │
-   └── Run New Container
-   │
-   ▼
+    ↓
+Build & Test
+    ↓
 Docker
-   │
-   ▼
-Node.js Application
+    ↓
+Containerized Node.js Application
 ```
 
-The Jenkins pipeline automates the process of building and deploying the application in a Docker container.
+Additional DevSecOps components such as SonarQube and Terraform are included for learning and experimentation.
 
 ---
 
-## Technologies
+## ✨ Technologies
 
-* **Node.js** — Application runtime
-* **Express.js** — Web application framework
-* **Jenkins** — CI/CD automation
-* **Docker** — Containerization
-* **Docker Compose** — Container-based deployment
-* **Mocha** — Application testing
-* **SonarQube** — Code analysis configuration
-* **Terraform** — Infrastructure as Code
-* **Git & GitHub** — Version control
-* **Linux** — Development environment
+### Application
 
-The Node.js project includes `start`, `test`, and `sonar` scripts for running the application, tests, and SonarQube scanner respectively.
+* Node.js
+* Express.js
+* JavaScript
+
+### Testing
+
+* Mocha
+* Node.js testing tools
+
+### CI/CD
+
+* Jenkins
+
+### Containers
+
+* Docker
+* Docker Compose
+
+### Code Quality
+
+* SonarQube
+
+### Infrastructure
+
+* Terraform
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 node-cicd/
 │
-├── DevSecOps/                 # DevSecOps-related files
-├── terraform/                 # Terraform configuration
-├── views/                     # Application views
+├── DevSecOps/
+├── terraform/
+├── views/
 │
-├── app.js                     # Node.js application
-├── test.js                    # Mocha tests
-│
-├── Dockerfile                 # Docker image configuration
-├── docker-compose.yaml        # Docker Compose configuration
-├── Jenkinsfile                # Jenkins pipeline
-├── sonar-project.properties   # SonarQube configuration
-│
-├── package.json               # Dependencies and scripts
-├── package-lock.json
-├── .dockerignore
-├── .gitignore
+├── Dockerfile
+├── Jenkinsfile
+├── docker-compose.yaml
+├── sonar-project.properties
+├── app.js
+├── test.js
+├── package.json
 └── README.md
 ```
 
 ---
 
-## Run Locally
+## 🚀 Getting Started
 
 ### Clone the repository
 
@@ -83,222 +90,195 @@ git clone https://github.com/bhavyasehgall/node-cicd.git
 cd node-cicd
 ```
 
+### Check Node.js
+
+```bash
+node --version
+npm --version
+```
+
 ### Install dependencies
 
 ```bash
 npm install
 ```
 
-### Start the application
+---
+
+## ▶️ Run the Application
+
+Start the Node.js application:
 
 ```bash
 node app.js
 ```
 
-The application runs on port `8000`.
+The application can then be accessed through the port configured by the project.
 
 ---
 
-## Run with Docker
+## 🧪 Run Tests
 
-### Build the image
-
-```bash
-docker build -t node-app .
-```
-
-### Start the container
-
-```bash
-docker run -d \
-  -p 8000:8000 \
-  --name node-app-container \
-  node-app
-```
-
-Open:
-
-```text
-http://localhost:8000
-```
-
-The Dockerfile uses `node:18-alpine`, installs the Node.js dependencies, copies the application into the image, exposes port `8000`, and starts `app.js`.
-
----
-
-## Docker Compose
-
-The repository also contains a Docker Compose configuration.
-
-```bash
-docker compose up
-```
-
-To stop the deployment:
-
-```bash
-docker compose down
-```
-
-The current Compose configuration exposes port `8000` and uses the configured Node.js application image.
-
----
-
-## Jenkins CI/CD Pipeline
-
-The `Jenkinsfile` defines a four-stage pipeline.
-
-### 1. Clone Code
-
-Jenkins checks out the `main` branch from this repository.
-
-### 2. Build Docker Image
-
-Jenkins builds the application image:
-
-```bash
-docker build -t node-app .
-```
-
-### 3. Stop Old Container
-
-The previous application container is removed:
-
-```bash
-docker rm -f node-app-container || true
-```
-
-### 4. Run Container
-
-Jenkins starts the newly built image:
-
-```bash
-docker run -d -p 8000:8000 \
-  --name node-app-container \
-  node-app
-```
-
-These stages are defined directly in the current Jenkins pipeline.
-
----
-
-## Testing
-
-The project includes Mocha-based tests.
-
-Run them with:
+Run the project's test command:
 
 ```bash
 npm test
 ```
 
-The current test file contains basic assertions demonstrating automated testing with Mocha and Node.js `assert`.
+If the repository's current `package.json` uses a different test command, use the command defined there.
 
 ---
 
-## SonarQube
+# 🐳 Docker
 
-The repository includes a `sonar-project.properties` configuration for analyzing the JavaScript application with SonarQube.
-
-The configuration defines:
-
-```text
-Project Key: node-todo-app
-Project Name: Node application
-Language: JavaScript
-Source: ./
-```
-
-SonarQube can be invoked through the project's npm script:
+Build the Docker image:
 
 ```bash
-npm run sonar
+docker build -t node-cicd .
 ```
 
-The SonarQube configuration is included in the repository but is **not currently executed as a stage in the Jenkinsfile**.
+Run the container:
+
+```bash
+docker run -p 3000:3000 node-cicd
+```
 
 ---
 
-## DevSecOps
+## 🐳 Docker Compose
 
-The repository contains a `DevSecOps/` directory along with SonarQube and Terraform configurations.
+Where supported by the current configuration:
 
-These components provide a foundation for extending the pipeline with security and infrastructure automation.
+```bash
+docker compose up --build
+```
 
-Possible integrations include:
+Stop the environment:
+
+```bash
+docker compose down
+```
+
+---
+
+# 🔄 Jenkins Pipeline
+
+The repository includes a `Jenkinsfile` for experimenting with automated application workflows.
+
+A typical pipeline can include:
 
 ```text
-Source Code
-     │
-     ▼
-Automated Tests
-     │
-     ▼
-Code Quality Analysis
-     │
-     ▼
-Security Scanning
-     │
-     ▼
-Docker Image
-     │
-     ▼
-Container Deployment
+Checkout
+   ↓
+Install Dependencies
+   ↓
+Build
+   ↓
+Run Tests
+   ↓
+Docker Build
+   ↓
+Deployment / Further Security Checks
 ```
 
-The current Jenkins pipeline focuses on Docker-based build and deployment. Security scanning and additional DevSecOps stages can be integrated as the project evolves.
+The exact stages depend on the current Jenkins configuration.
 
 ---
 
-## Terraform
+# 🔍 SonarQube
 
-The repository contains a `terraform/` directory for Infrastructure as Code.
+The repository includes:
 
-Terraform can be used to define and provision infrastructure through configuration files instead of manually creating resources.
+```text
+sonar-project.properties
+```
 
-This provides a path toward integrating cloud infrastructure deployment into the CI/CD workflow.
+for experimenting with static code analysis and code-quality workflows.
 
----
-
-## What This Project Demonstrates
-
-* CI/CD fundamentals
-* Jenkins pipeline configuration
-* Docker containerization
-* Automated Docker deployment
-* Node.js application deployment
-* Basic automated testing
-* SonarQube configuration
-* DevSecOps concepts
-* Infrastructure as Code concepts
-* Git and GitHub workflows
-* Linux-based application deployment
+SonarQube configuration is included as part of the project's DevSecOps learning environment.
 
 ---
 
-## Future Improvements
+# 🏗️ Terraform
 
-The pipeline can be extended with:
+Terraform configuration is included under:
 
-* Automated unit testing in Jenkins
-* SonarQube quality gates
+```text
+terraform/
+```
+
+This section is used to explore infrastructure-as-code concepts alongside CI/CD and application deployment.
+
+---
+
+# 🔐 DevSecOps Learning Goals
+
+This project helps explore how security can be incorporated into software delivery.
+
+Areas of interest include:
+
+* Static analysis
+* Dependency security
+* Automated testing
+* Container security
+* Infrastructure security
+* Secure CI/CD practices
+
+Some security stages may be experimental or planned for future implementation.
+
+---
+
+# 🧠 What I Learned
+
+Through this project I practiced:
+
+* Node.js application development
+* Express.js
+* Automated testing
+* Jenkins pipelines
+* Docker
+* Docker Compose
+* SonarQube
+* Terraform
+* CI/CD concepts
+* DevSecOps workflows
+
+---
+
+# 🚧 Future Improvements
+
+Potential improvements include:
+
+* Automated SAST
 * Dependency vulnerability scanning
-* Docker image vulnerability scanning
-* Secret scanning
-* SAST
-* DAST
-* Security-based pipeline gates
-* Docker registry integration
-* AWS deployment
-* Terraform automation
-* Application monitoring and logging
+* Container image scanning
+* Better Jenkins security stages
+* Automated SonarQube quality gates
+* Infrastructure validation
+* Automated deployment
+* Improved test coverage
+* Security-focused CI checks
 
 ---
 
-## Author
+## 📌 Project Status
+
+This is a **learning-focused CI/CD and DevSecOps project**.
+
+It is intended to demonstrate practical experimentation with development, automation, containers, infrastructure, and security concepts rather than represent a production deployment pipeline.
+
+---
+
+## 📜 License
+
+See the repository license for applicable terms.
+
+---
+
+## 👤 Author
 
 **Bhavya Sehgal**
 
-Cybersecurity | VAPT | DevSecOps | Security Automation
+Cybersecurity | VAPT | Security Automation | DevSecOps
 
-[GitHub](https://github.com/bhavyasehgall)
+GitHub: https://github.com/bhavyasehgall
